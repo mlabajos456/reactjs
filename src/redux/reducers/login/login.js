@@ -16,10 +16,8 @@ const loginReducer = (state = initialState, action) => {
             }
         case 'GET_TOKEN':
             return {
-
-                ...state,
-                usuario: action.data
-
+                usuario: action.data,
+                ...state
             }
         case 'SALIR':
             return { ...state, usuario: {} }

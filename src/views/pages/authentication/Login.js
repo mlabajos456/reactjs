@@ -37,7 +37,7 @@ const ToastContent = ({ name, role }) => (
       </div>
     </div>
     <div className='toastify-body'>
-      <span>You have successfully logged in as an {role} user to Vuexy. Now you can start to explore. Enjoy!</span>
+      <span>You have successfully logged rol {role ? 'Admin' : 'mortal'} user to Vuexy. Now you can start to explore. Enjoy!</span>
     </div>
   </Fragment>
 )
@@ -58,30 +58,26 @@ const Login = props => {
     if (errors && !errors.length) {
 
       await getLogin(email, password).then((e) => {
-        console.log(e)
+        setSkin('dark')
         dispatch(getToken(e.data.token, e.data.user))
         const usuario = {
-          id: 1,
-          fullName: 'John Doe',
-          username: 'johndoe',
-          password: 'admin',
           avatar: require('@src/assets/images/portrait/small/avatar-s-11.jpg').default,
-          email: 'admin@demo.com',
-          role: 'admin',
+
           ability: [
             {
               action: 'manage',
               subject: 'all'
             }
-          ],
-          extras: {
-            eCommerceCartItemsCount: 5
-          }
+          ]
+
         }
         const data = { ...usuario, accessToken: selector.login.usuario.token }
-        console.log(data.ability)
         ability.update(data.ability)
         history.push(getHomeRouteForLoggedInUser('admin'))
+        toast.success(
+          <ToastContent name={e.data.user.nombreCompleto} role={e.data.administrador || 'admin'} />,
+          { transition: Slide, hideProgressBar: true, autoClose: 2000 }
+        )
       }).catch(err => {
         console.log(err)
       })
