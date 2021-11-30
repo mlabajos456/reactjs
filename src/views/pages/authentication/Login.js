@@ -10,6 +10,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 import { Link, useHistory } from 'react-router-dom'
 import InputPasswordToggle from '@components/input-password-toggle'
 import { getHomeRouteForLoggedInUser } from '@utils'
+import { getLogin } from '@src/services/loginService'
 import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee } from 'react-feather'
 import { AvForm, AvInput } from 'availity-reactstrap-validation-safe'
 import {
@@ -53,38 +54,40 @@ const Login = props => {
   const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
 
-  const handleSubmit = (event, errors) => {
+  const handleSubmit = async (event, errors) => {
     if (errors && !errors.length) {
 
-
-      dispatch(getToken(email, password)).subscribe((e) => {
+      await getLogin(email, password).then((e) => {
         console.log(e)
-
-      })
-
-      console.log(res)
-      const usuario = {
-        id: 1,
-        fullName: 'John Doe',
-        username: 'johndoe',
-        password: 'admin',
-        avatar: require('@src/assets/images/portrait/small/avatar-s-11.jpg').default,
-        email: 'admin@demo.com',
-        role: 'admin',
-        ability: [
-          {
-            action: 'manage',
-            subject: 'all'
+        dispatch(getToken(e.data.token, e.data.user))
+        const usuario = {
+          id: 1,
+          fullName: 'John Doe',
+          username: 'johndoe',
+          password: 'admin',
+          avatar: require('@src/assets/images/portrait/small/avatar-s-11.jpg').default,
+          email: 'admin@demo.com',
+          role: 'admin',
+          ability: [
+            {
+              action: 'manage',
+              subject: 'all'
+            }
+          ],
+          extras: {
+            eCommerceCartItemsCount: 5
           }
-        ],
-        extras: {
-          eCommerceCartItemsCount: 5
         }
-      }
-      const data = { ...usuario, accessToken: selector.login.usuario.token }
-      console.log(data.ability)
-      ability.update(data.ability)
-      history.push(getHomeRouteForLoggedInUser('admin'))
+        const data = { ...usuario, accessToken: selector.login.usuario.token }
+        console.log(data.ability)
+        ability.update(data.ability)
+        history.push(getHomeRouteForLoggedInUser('admin'))
+      }).catch(err => {
+        console.log(err)
+      })
+      //dispatch(getToken(email, password))
+
+
       // dispatch(handleLogin(data))
       /*   history.push(getHomeRouteForLoggedInUser('admin'))
         
