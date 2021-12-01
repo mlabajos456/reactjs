@@ -6,7 +6,8 @@ const initialState = {
   query: "<>",
   totalElements: 0,
   totalPages: 0,
-  loading: false
+  loading: false,
+  error: null
 }
 
 const PacientesReducer = (state = initialState, action) => {
