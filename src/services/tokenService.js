@@ -15,24 +15,28 @@ class TokenService {
         localStorage.setItem("user", JSON.stringify(user))
     }
 */
-    getUser() {
-        return JSON.parse(localStorage.getItem("userData"))
-    }
+  getUser() {
+    return JSON.parse(localStorage.getItem("userData"))
+  }
 
-    setUser(user) {
-        localStorage.setItem("userData", JSON.stringify(user))
-    } 
+  setUser(user) {
+    localStorage.setItem("userData", JSON.stringify(user))
+  }
 
-    setToken(token) {
-        localStorage.setItem("token", JSON.stringify(token))
-    }
-    getToken() {
-        return JSON.parse(localStorage.getItem("token"))
-    }
+  setToken(token) {
+    localStorage.setItem("token", JSON.stringify(token))
+  }
+  getToken() {
+    return JSON.parse(localStorage.getItem("token"))
+  }
 
-    removeUser() {
-        localStorage.removeItem("user")
-    }
+  removeToken() {
+    localStorage.removeItem("token")
+  }
+
+  removeUser() {
+    localStorage.removeItem("userData")
+  }
 }
 
 export default new TokenService()
