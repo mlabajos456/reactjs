@@ -1,6 +1,5 @@
 import API from '../../../api/api'
 import tokenService from '../../../services/tokenService'
-import axios from "axios"
 export const getToken = (token, user) => {
     return dispatch => {
         dispatch({

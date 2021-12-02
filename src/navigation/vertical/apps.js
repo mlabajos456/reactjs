@@ -114,5 +114,11 @@ export default [
         navLink: '/apps/user/edit'
       }
     ]
+  },
+  {
+    id: 'pacientes',
+    title: 'Pacientes',
+    icon: <User size={20} />,
+    navLink: '/pacientes'
   }
 ]

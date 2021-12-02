@@ -166,6 +166,13 @@ const AppRoutes = [
     meta: {
       navLink: '/apps/user/view'
     }
+  },
+  {
+    path: '/apps/email',
+    exact: true,
+    appLayout: true,
+    className: 'email-application',
+    component: lazy(() => import('../../views/apps/email'))
   }
 ]
 

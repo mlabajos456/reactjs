@@ -1,5 +1,4 @@
 import axios from 'axios'
-import tokenService from './tokenService'
 export const getLogin = async (usuario, password) => {
 
     const log = await axios.post(`http://localhost:8083/securytramite/api/auth`, {
