@@ -1,5 +1,5 @@
 import { React, Fragment, useEffect, useState } from "react"
-import { getAllPacientes } from "../../redux/actions/pacientes"
+import { getAllPacientes } from "../../../redux/actions/pacientes"
 import { useSelector, useDispatch } from "react-redux"
 
 // ** Styles
@@ -12,6 +12,9 @@ import ReactPaginate from "react-paginate"
 import { ChevronDown } from "react-feather"
 import DataTable from "react-data-table-component"
 import { selectThemeColors } from "@utils"
+
+// ** Columns
+import { columns } from "./columns"
 import {
   Card,
   CardHeader,
@@ -31,7 +34,8 @@ const CustomHeader = ({
   handlePerPage,
   rowsPerPage,
   handleFilter,
-  searchTerm
+  searchTerm,
+  keyChangeFilter
 }) => {
   return (
     <div className="invoice-list-table-header w-100 mr-1 ml-50 mt-2 mb-75">
@@ -71,8 +75,9 @@ const CustomHeader = ({
               id="search-invoice"
               className="ml-50 w-100"
               type="text"
-              value={searchTerm}
-              onChange={(e) => handleFilter(e.target.value)}
+              value={searchTerm === "<>" ? "" : searchTerm}
+              onKeyPress={handleFilter}
+              onChange={(e) => keyChangeFilter(e.target.value)}
             />
           </div>
           <Button.Ripple color="primary" onClick={toggleSidebar}>
@@ -95,10 +100,68 @@ const TablaPacientes = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10) //limit
   const [totalPages, setTotalPages] = useState(10) //totalPages
 
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+
   //INICIALIZANDO LISTA DE PACIENTES
   useEffect(() => {
     dispatch(getAllPacientes())
   }, [dispatch])
+
+  //funciones
+  //SIGUIENTE PAGINA
+  const handlePagination = (page) => {
+    dispatch(getAllPacientes(page.selected + 1, rowsPerPage, searchTerm))
+    setCurrentPage(page.selected + 1)
+  }
+
+  //LIMITE DE PAGINAS
+  const handlePerPage = (e) => {
+    const value = parseInt(e.currentTarget.value)
+    dispatch(getAllPacientes(currentPage, value, searchTerm))
+    setRowsPerPage(value)
+  }
+  //Buscar QUERY
+  const handleFilter = (e) => {
+    if (e.key === "Enter") {
+      dispatch(getAllPacientes(currentPage, rowsPerPage, searchTerm))
+    }
+  }
+  //INSERTAR QUERY AL PRESIONAR UN BUTTON
+  const keyChangeFilter = (e) => {
+    setSearchTerm(e)
+  }
+
+  //NAVIGATOR
+  const CustomPagination = () => {
+    const count = Number((store.totalElements / rowsPerPage).toFixed(0))
+    return (
+      <ReactPaginate
+        previousLabel={""}
+        nextLabel={""}
+        pageCount={count || 1}
+        activeClassName="active"
+        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        onPageChange={(page) => handlePagination(page)}
+        pageClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        nextClassName={"page-item next"}
+        previousClassName={"page-item prev"}
+        previousLinkClassName={"page-link"}
+        pageLinkClassName={"page-link"}
+        containerClassName={
+          "pagination react-paginate justify-content-end my-2 pr-1"
+        }
+      />
+    )
+  }
+  //NAVIGATOR
+  const dataToRender = () => {
+    if (store.pacientes.length > 0) {
+      return store.pacientes
+    } else {
+      return []
+    }
+  }
 
   if (store.loading) {
     return (
@@ -108,13 +171,48 @@ const TablaPacientes = () => {
     )
   } else {
     return (
+      <Card>
+        <DataTable
+          noHeader
+          pagination
+          subHeader
+          responsive
+          paginationServer
+          columns={columns}
+          sortIcon={<ChevronDown />}
+          className="react-dataTable"
+          paginationComponent={CustomPagination}
+          data={dataToRender()}
+          subHeaderComponent={
+            <CustomHeader
+              toggleSidebar={toggleSidebar}
+              handlePerPage={handlePerPage}
+              rowsPerPage={rowsPerPage}
+              searchTerm={searchTerm}
+              handleFilter={handleFilter}
+              keyChangeFilter={keyChangeFilter}
+            />
+          }
+        />
+      </Card>
+    )
+    /* return (
       <Fragment>
-        <CustomHeader></CustomHeader>
+        <CustomHeader
+          toggleSidebar={toggleSidebar}
+          handlePerPage={handlePerPage}
+          rowsPerPage={rowsPerPage}
+          searchTerm={searchTerm}
+          handleFilter={handleFilter}
+          keyChangeFilter={keyChangeFilter}
+        ></CustomHeader>
         {store.pacientes.map((pac) => {
           return <li key={pac.id}>{pac.nombre}</li>
         })}
+
+        <CustomPagination></CustomPagination>
       </Fragment>
-    )
+    ) */
   }
 }
 
