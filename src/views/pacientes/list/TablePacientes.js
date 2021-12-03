@@ -15,6 +15,7 @@ import { selectThemeColors } from "@utils"
 
 // ** Columns
 import { columns } from "./columns"
+import  Sidebar  from "./Sidebar"
 import {
   Card,
   CardHeader,
@@ -99,6 +100,7 @@ const TablaPacientes = () => {
   const [currentPage, setCurrentPage] = useState(1) //page
   const [rowsPerPage, setRowsPerPage] = useState(10) //limit
   const [totalPages, setTotalPages] = useState(10) //totalPages
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
@@ -156,7 +158,7 @@ const TablaPacientes = () => {
   }
   //NAVIGATOR
   const dataToRender = () => {
-    if (store.pacientes.length > 0) {
+    if (store.pacientes?.length > 0) {
       return store.pacientes
     } else {
       return []
@@ -171,30 +173,33 @@ const TablaPacientes = () => {
     )
   } else {
     return (
-      <Card>
-        <DataTable
-          noHeader
-          pagination
-          subHeader
-          responsive
-          paginationServer
-          columns={columns}
-          sortIcon={<ChevronDown />}
-          className="react-dataTable"
-          paginationComponent={CustomPagination}
-          data={dataToRender()}
-          subHeaderComponent={
-            <CustomHeader
-              toggleSidebar={toggleSidebar}
-              handlePerPage={handlePerPage}
-              rowsPerPage={rowsPerPage}
-              searchTerm={searchTerm}
-              handleFilter={handleFilter}
-              keyChangeFilter={keyChangeFilter}
-            />
-          }
-        />
-      </Card>
+      <>
+        <Card>
+          <DataTable
+            noHeader
+            pagination
+            subHeader
+            responsive
+            paginationServer
+            columns={columns}
+            sortIcon={<ChevronDown />}
+            className="react-dataTable"
+            paginationComponent={CustomPagination}
+            data={dataToRender()}
+            subHeaderComponent={
+              <CustomHeader
+                toggleSidebar={toggleSidebar}
+                handlePerPage={handlePerPage}
+                rowsPerPage={rowsPerPage}
+                searchTerm={searchTerm}
+                handleFilter={handleFilter}
+                keyChangeFilter={keyChangeFilter}
+              />
+            }
+          />
+        </Card>
+        <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      </>
     )
     /* return (
       <Fragment>

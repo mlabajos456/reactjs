@@ -36,8 +36,6 @@ const PacientesReducer = (state = initialState, action) => {
           userSelect = item
         }
       })
-      console.info("soy el paciente seleccionado causita ctm", userSelect)
-
       // ** Get index to add or remove bookmark from array
       /*  const bookmarkIndex = state.bookmarks.findIndex(x => x.id === action.id)
 
