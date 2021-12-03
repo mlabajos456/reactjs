@@ -10,12 +10,11 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    console.log(config)
     const token = TokenService.getToken()
 
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`
-          //  config.headers["x-access-token"] = token; // for Node.js Express back-end
+      //  config.headers["x-access-token"] = token; // for Node.js Express back-end
     }
     return config
   },

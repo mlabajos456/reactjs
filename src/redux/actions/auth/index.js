@@ -1,4 +1,4 @@
-// ** Handle User Login
+/* // ** Handle User Login
 export const handleLogin = data => {
   return dispatch => {
     dispatch({ type: 'LOGIN', data })
@@ -17,3 +17,4 @@ export const handleLogout = () => {
     localStorage.removeItem('userData')
   }
 }
+ */

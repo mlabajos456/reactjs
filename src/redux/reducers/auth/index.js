@@ -1,4 +1,4 @@
-// **  Initial State
+/* // **  Initial State
 const initialState = {
   userData: {}
 }
@@ -15,3 +15,4 @@ const authReducer = (state = initialState, action) => {
 }
 
 export default authReducer
+ */
