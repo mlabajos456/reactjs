@@ -15,7 +15,7 @@ instance.interceptors.request.use(
 
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`
-          //  config.headers["x-access-token"] = token; // for Node.js Express back-end
+      //  config.headers["x-access-token"] = token; // for Node.js Express back-end
     }
     return config
   },
@@ -29,6 +29,33 @@ instance.interceptors.response.use(
     return res
   },
   async (err) => {
+    const originalConfig = err.config
+
+    if (originalConfig.url !== "/securytramite/api/auth" && err.response) {
+      if (err.response.status === 401 && !originalConfig._retry) {
+        originalConfig._retry = true
+        try {
+          const log = await axios.post(
+            `http://localhost:8083/securytramite/api/auth`,
+            {
+              username: "44429462",
+              password: "ANGEL123"
+            }
+          )
+
+          TokenService.removeToken()
+          console.log(log)
+          TokenService.setToken(log.data.token)
+
+          return instance(originalConfig)
+        } catch (_error) {
+          return Promise.reject(_error)
+        }
+      }
+    }
+
+    return Promise.reject(err)
+
     /* const originalConfig = err.config;
 
     if (originalConfig.url !== "/auth/signin" && err.response) {
