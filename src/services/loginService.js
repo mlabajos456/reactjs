@@ -1,11 +1,24 @@
 import axios from "axios"
-export const getLogin = async (usuario, password) => {
+export async function getLogin(email, password) {
+  const { data } = await axios.post(
+    `http://localhost:8083/securytramite/api/auth`,
+    {
+      username: "44429462",
+      password: "ANGEL123"
+    }
+  )
+  console.info("respouesta", data)
+  return data
+}
+
+/* export const getLogin = async (usuario, password) => {
   const log = await axios.post(`http://localhost:8083/securytramite/api/auth`, {
     username: "44429462",
     password: "ANGEL123"
   })
   return log
-  /*   .then(response => {
+} */
+/*   .then(response => {
             dispatch({
                 type: 'GET_TOKEN',
                 data: response.data
@@ -20,4 +33,3 @@ export const getLogin = async (usuario, password) => {
       }).catch(error => {
           return error
       }) */
-}

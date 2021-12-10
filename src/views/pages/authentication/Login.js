@@ -11,6 +11,8 @@ import { Link, useHistory } from "react-router-dom"
 import InputPasswordToggle from "@components/input-password-toggle"
 import { getHomeRouteForLoggedInUser } from "@utils"
 import { getLogin } from "@src/services/loginService"
+//import useLogin from "@src/services/loginService"
+
 import {
   Facebook,
   Twitter,
@@ -34,6 +36,7 @@ import {
 } from "reactstrap"
 
 import "@styles/base/pages/page-auth.scss"
+import { useQuery, useMutation } from "react-query"
 
 const ToastContent = ({ name, role, type }) => (
   <Fragment>
@@ -60,13 +63,67 @@ const Login = (props) => {
   const history = useHistory()
   const [email, setEmail] = useState("admin@demo.com")
   const [password, setPassword] = useState("admin")
-
+  const {
+    data,
+    error,
+    isError,
+    isIdle,
+    isLoading,
+    isPaused,
+    isSuccess,
+    mutate,
+    mutateAsync,
+    reset,
+    status
+  } = useMutation(getLogin)
   const illustration = skin === "dark" ? "login-v2-dark.svg" : "login-v2.svg",
     source = require(`@src/assets/images/pages/${illustration}`).default
 
-  const handleSubmit = async (event, errors) => {
+  /*  async function fetchPosts() {
+    const { data } = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts"
+    )
+    return data
+  }
+  const res = useQuery("posts", fetchPosts)
+  console.log(res) */
+
+  const handleSubmit = (event, errors) => {
     if (errors && !errors.length) {
-      await getLogin(email, password)
+      mutate()
+      if (isSuccess) {
+        console.log("good")
+        setSkin("dark")
+        const usuario = {
+          email: data.user.email,
+          id: data.user.id,
+          nombreCompleto: data.user.nombreCompleto,
+          username: data.user.username,
+          avatar: require("@src/assets/images/portrait/small/avatar-s-11.jpg")
+            .default,
+
+          ability: [
+            {
+              action: "manage",
+              subject: "all"
+            }
+          ]
+        }
+        const user = { ...usuario }
+        dispatch(getToken(data.token, user))
+
+        ability.update(user.ability)
+        history.push(getHomeRouteForLoggedInUser("admin"))
+        toast.success(
+          <ToastContent
+            name={data.user.nombreCompleto}
+            role={data.administrador || "admin"}
+            type="success"
+          />,
+          { transition: Slide, hideProgressBar: true, autoClose: 2000 }
+        )
+      }
+      /* await getLogin(email, password)
         .then((e) => {
           setSkin("dark")
           const usuario = {
@@ -107,9 +164,8 @@ const Login = (props) => {
             hideProgressBar: true,
             autoClose: 2000
           })
-        })
+        }) */
       //dispatch(getToken(email, password))
-
       // dispatch(handleLogin(data))
       /*   history.push(getHomeRouteForLoggedInUser('admin'))
         
