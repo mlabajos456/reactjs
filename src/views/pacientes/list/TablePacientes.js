@@ -14,6 +14,10 @@ import "@styles/react/libs/tables/react-dataTable-component.scss"
 import ReactPaginate from "react-paginate"
 import { ChevronDown } from "react-feather"
 import DataTable from "react-data-table-component"
+import { selectThemeColors } from "@utils"
+
+// ** Columns/* 
+
 import {
   Card,
   CardHeader,
@@ -156,7 +160,7 @@ const TablaPacientes = () => {
   }
   //NAVIGATOR
   const dataToRender = () => {
-    if (store.pacientes.length > 0) {
+    if (store.pacientes?.length > 0) {
       return store.pacientes
     } else {
       return []
